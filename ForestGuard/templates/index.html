@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ForestGuard — Sala de Control & Estación IoT</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- Barra de Navegación Superior -->
+    <header class="topbar">
+        <div class="logo">🌲 <strong>ForestGuard</strong> </div>
+        
+        <nav class="main-nav">
+            <a href="#" class="nav-link active" data-tab="dashboard">Panel Operativo</a>
+            <a href="#" class="nav-link" data-tab="hardware">Producto & Hardware</a>
+            <a href="#" class="nav-link" data-tab="deployment">Solicitar Despliegue</a>
+        </nav>
+
+        <div id="global-status" class="status-badge status-ok">🟡 NODOS EN LÍNEA</div>
+    </header>
+
+    <main class="dashboard">
+
+        <!-- Banner de Alerta Crítica Dinámico -->
+        <div id="live-alert-banner" class="alert-banner hidden">
+            ⚠️ ¡ALERTA CRÍTICA: CONDICIONES EXTREMAS O INCENDIO DETECTADO EN EL SECTOR SELECCIONADO!
+        </div>
+
+        <!-- PESTAÑA 1: PANEL OPERATIVO (NIVEL 3: MULTI-NODO) -->
+        <section id="dashboard" class="tab-content">
+
+            <!-- SELECTOR NIVEL 3: SALA DE CONTROL MULTI-NODO -->
+            <div class="node-selector-container">
+                <h3>📍 Red de Estaciones en Tiempo Real</h3>
+                <p class="subtitle">Selecciona una estación de monitoreo para inspeccionar sus métricas y forzar simulaciones:</p>
+                
+                <div class="node-cards-grid">
+                    <div class="node-btn active" data-node="node1" id="node-btn-node1">
+                        <span class="node-status-dot green"></span>
+                        <div class="node-info">
+                            <strong>Nodo 01 — Valparaíso</strong>
+                            <small>Reserva Peñuelas</small>
+                        </div>
+                    </div>
+
+                    <div class="node-btn" data-node="node2" id="node-btn-node2">
+                        <span class="node-status-dot green"></span>
+                        <div class="node-info">
+                            <strong>Nodo 02 — Biobío</strong>
+                            <small>Parque Nahuelbuta</small>
+                        </div>
+                    </div>
+
+                    <div class="node-btn" data-node="node3" id="node-btn-node3">
+                        <span class="node-status-dot green"></span>
+                        <div class="node-info">
+                            <strong>Nodo 03 — Araucanía</strong>
+                            <small>Reserva Conguillío</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="live-metrics">
+                <h2 id="active-node-title">Nodo Activo: ESP32-FG-01</h2>
+                <p class="location">📍 Ubicación Activa: <strong id="active-node-location">Sector Valparaíso - Reserva Peñuelas</strong></p>
+
+                <!-- Tarjetas de Métricas -->
+                <div class="metrics-grid">
+                    <div class="metric-card" id="card-temp">
+                        <span class="icon">🌡️</span>
+                        <h3>Temperatura</h3>
+                        <div class="value" id="temp-value">24.5 °C</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="temp-bar" style="width: 30%;"></div>
+                        </div>
+                        <small>Sensor Térmico de Alta Precisión</small>
+                    </div>
+
+                    <div class="metric-card" id="card-hum">
+                        <span class="icon">💧</span>
+                        <h3>Humedad Relativa</h3>
+                        <div class="value" id="hum-value">55 %</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="hum-bar" style="width: 55%;"></div>
+                        </div>
+                        <small>Sensor Ambiental IP65</small>
+                    </div>
+
+                    <div class="metric-card" id="card-smoke">
+                        <span class="icon">💨</span>
+                        <h3>Nivel de Humo (MQ-2)</h3>
+                        <div class="value" id="smoke-value">NORMAL</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="smoke-bar" style="width: 5%;"></div>
+                        </div>
+                        <small>Análisis de Partículas en Aire</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL INTERACTIVO DE SIMULACIÓN -->
+            <div class="control-panel">
+                <h3>🎛️ Simulador de Sensores (Estación Seleccionada)</h3>
+                <p class="subtitle">Modifica los parámetros del nodo actual para probar el algoritmo de alertas.</p>
+
+                <div class="controls-grid">
+                    <div class="control-card">
+                        <label for="temp-slider">Forzar Temperatura (°C):</label>
+                        <input type="range" id="temp-slider" min="15" max="50" step="0.5" value="24.5">
+                    </div>
+
+                    <div class="control-card">
+                        <label for="hum-slider">Forzar Humedad (%):</label>
+                        <input type="range" id="hum-slider" min="10" max="80" step="1" value="55">
+                    </div>
+
+                    <div class="control-card">
+                        <label>Simular Sensor MQ-2 (Humo):</label>
+                        <div style="margin-top: 8px;">
+                            <input type="checkbox" id="smoke-toggle">
+                            <span style="color: #0f172a; font-size: 0.9rem; margin-left: 5px; font-weight: 600;">Presencia de Humo</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; text-align: center;">
+                    <button id="btn-auto-sim" class="btn btn-secondary">Iniciar Fluctuación Automática 🔄</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PESTAÑA 2: PRODUCTO, HARDWARE Y FLUJO -->
+        <section id="hardware" class="tab-content hidden">
+            <div class="product-spec">
+                <h2>Estación ForestGuard Sentinel-X (Hardware)</h2>
+                <p class="subtitle">Diseñada para operar de forma autónoma en entornos forestales exigentes.</p>
+
+                <div class="spec-grid">
+                    <div class="spec-card">
+                        <div class="icon">🧠</div>
+                        <h4>Procesador Central</h4>
+                        <p>Microcontrolador ESP32 de doble núcleo con conectividad Wi-Fi / LoRaWAN de largo alcance.</p>
+                    </div>
+
+                    <div class="spec-card">
+                        <div class="icon">🔋</div>
+                        <h4>Autonomía Energética</h4>
+                        <p>Panel solar integrado de 5V + Batería LiFePO4 de 5000mAh. Operación continua 24/7.</p>
+                    </div>
+
+                    <div class="spec-card">
+                        <div class="icon">🛡️</div>
+                        <h4>Gabinete Resistente</h4>
+                        <p>Carcasa industrial con certificación IP65, resistente a altas temperaturas y humedad extrema.</p>
+                    </div>
+
+                    <div class="spec-card">
+                        <div class="icon">📡</div>
+                        <h4>Sensores Calibrados</h4>
+                        <p>Sensores MQ-2 (Gas/Humo) y DHT22 (Temp/Humedad) optimizados para detección temprana.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DIAGRAMA DE FLUJO DEL SISTEMA -->
+            <div class="system-process-container">
+                <h2>¿Cómo funciona ForestGuard?</h2>
+                <p class="subtitle">Flujo de datos de extremo a extremo desde el entorno forestal hasta la plataforma.</p>
+
+                <div class="process-flow">
+                    <div class="step-card">
+                        <div class="step-icon">🌡️</div>
+                        <h4>1. Sensores</h4>
+                        <p>Capturan temperatura, humedad y presencia de humo.</p>
+                    </div>
+
+                    <div class="flow-connector">───</div>
+
+                    <div class="step-card">
+                        <div class="step-icon">🧠</div>
+                        <h4>2. ESP32</h4>
+                        <p>Procesa los datos obtenidos por los sensores.</p>
+                    </div>
+
+                    <div class="flow-connector">───</div>
+
+                    <div class="step-card">
+                        <div class="step-icon">📡</div>
+                        <h4>3. Wi-Fi</h4>
+                        <p>Envía la información al servidor mediante Internet.</p>
+                    </div>
+
+                    <div class="flow-connector">───</div>
+
+                    <div class="step-card">
+                        <div class="step-icon">🗄️</div>
+                        <h4>4. Servidor</h4>
+                        <p>Flask recibe y organiza los datos del sistema.</p>
+                    </div>
+
+                    <div class="flow-connector">───</div>
+
+                    <div class="step-card alert-step">
+                        <div class="step-icon">⚠️</div>
+                        <h4>5. Alerta</h4>
+                        <p>El usuario recibe una advertencia cuando existe riesgo de incendio.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PESTAÑA 3: SOLICITAR DESPLIEGUE -->
+        <section id="deployment" class="tab-content hidden">
+            <div class="deployment-container">
+                <h2>Adquirir o Desplegar Estaciones</h2>
+                <p>Completa el formulario para solicitar una evaluación de cobertura en tu reserva, parque o predio.</p>
+
+                <form id="order-form" class="order-form">
+                    <div class="form-group">
+                        <label>Organización / Reserva / Cliente:</label>
+                        <input type="text" placeholder="Ej: Reserva Ecológica El Canelo" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Paquete de Nodos Requerido:</label>
+                        <select>
+                            <option>Paquete Básico (3 Estaciones - 15 Ha Cobertura)</option>
+                            <option>Paquete Estándar (8 Estaciones - 50 Ha Cobertura)</option>
+                            <option>Paquete Empresarial (15+ Estaciones - Cobertura Personalizada)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Correo de Contacto:</label>
+                        <input type="email" placeholder="contacto@reserva.cl" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-secondary btn-large">Solicitar Cotización de Despliegue</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Sección de Equipo Fundador -->
+        <section class="team-section">
+            <h3>Equipo Fundador</h3>
+            <div class="team-grid">
+                {% for member in team %}
+                <div class="member-card">
+                    <div class="avatar">👤</div>
+                    <h4>{{ member.name }}</h4>
+                    <p>{{ member.role }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ARCHIVO JS -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
