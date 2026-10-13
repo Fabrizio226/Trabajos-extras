@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}{{ tarea.titulo }}{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('tareas.listar') }}">← Volver a Mis Tareas</a>
+<article class="detail-card">
+  <div class="detail-heading"><div><p class="eyebrow">INFORMACIÓN COMPLETA DE LA TAREA</p><h1>{{ tarea.titulo }}</h1></div><span class="badge state-{{ tarea.estado|lower|replace(' ', '-') }}">{{ tarea.estado }}</span></div>
+  <div class="detail-grid">
+    <p><span>▰</span><strong>Categoría</strong><span class="category-pill">{{ tarea.categoria_nombre }}</span></p>
+    <p><span>★</span><strong>Prioridad</strong><span class="badge priority-{{ tarea.prioridad|lower }}">{{ tarea.prioridad }}</span></p>
+    <p><span>◷</span><strong>Estado</strong><span class="badge state-{{ tarea.estado|lower|replace(' ', '-') }}">{{ tarea.estado }}</span></p>
+    <p><span>▦</span><strong>Fecha límite</strong><span>{{ tarea.fecha_limite.strftime('%Y-%m-%d') if tarea.fecha_limite else 'Sin fecha' }}</span></p>
+    <p><span>▣</span><strong>Creado el</strong><span>{{ tarea.creado_en.strftime('%Y-%m-%d %H:%M') }}</span></p>
+  </div>
+  <section class="detail-description"><h2>Descripción:</h2><p>{{ tarea.descripcion or 'Sin descripción.' }}</p></section>
+  <div class="detail-actions"><a class="btn btn-primary" href="{{ url_for('tareas.editar', tarea_id=tarea.id) }}">✎ Editar</a>
+    {% if tarea.estado != 'Completada' %}<form method="post" action="{{ url_for('tareas.completar', tarea_id=tarea.id) }}"><button class="btn btn-success" type="submit">Marcar como Completada</button></form>{% endif %}
+    <a class="btn btn-danger" href="{{ url_for('tareas.eliminar', tarea_id=tarea.id) }}">Borrar</a>
+  </div>
+</article>
+{% endblock %}

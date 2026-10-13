@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}{{ titulo_pagina }}{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('tareas.listar') }}">← Volver a Mis Tareas</a>
+<section class="editor-panel"><div><p class="eyebrow">TASKTRACK</p><h1>{{ titulo_pagina }}</h1></div>
+  {% if not categorias %}<div class="alert alert-warning">Necesitas crear una categoría antes de guardar una tarea. <a href="{{ url_for('tareas.nueva_categoria') }}">Crear categoría</a></div>{% endif %}
+  <form method="post" class="form-grid editor-form">
+    <div><label class="form-label" for="titulo">Título</label><input class="form-control" id="titulo" name="titulo" minlength="3" maxlength="160" required value="{{ valores.titulo }}"></div>
+    <div><label class="form-label" for="categoria_id">Categoría</label><select class="form-select" id="categoria_id" name="categoria_id" required><option value="">Selecciona una categoría</option>{% for categoria in categorias %}<option value="{{ categoria.id }}" {{ 'selected' if valores.categoria_id|string == categoria.id|string else '' }}>{{ categoria.nombre }}</option>{% endfor %}</select></div>
+    <div><label class="form-label" for="prioridad">Prioridad</label><select class="form-select" id="prioridad" name="prioridad" required><option value="">Selecciona una prioridad</option>{% for prioridad in prioridades %}<option value="{{ prioridad }}" {{ 'selected' if valores.prioridad == prioridad else '' }}>{{ prioridad }}</option>{% endfor %}</select></div>
+    <div><label class="form-label" for="fecha_limite">Fecha límite</label><input class="form-control" type="date" id="fecha_limite" name="fecha_limite" min="{{ fecha_minima }}" required value="{{ valores.fecha_limite.strftime('%Y-%m-%d') if valores.fecha_limite and valores.fecha_limite.strftime else valores.fecha_limite }}"></div>
+    <div><label class="form-label" for="descripcion">Descripción</label><textarea class="form-control" id="descripcion" name="descripcion" rows="5" minlength="10" maxlength="2000" required>{{ valores.descripcion }}</textarea><div class="form-text">Entre 10 y 2000 caracteres.</div></div>
+    <div class="form-actions"><a class="btn btn-link text-secondary" href="{{ url_for('tareas.listar') }}">Cancelar</a><button class="btn btn-primary" type="submit" {{ 'disabled' if not categorias else '' }}>{{ 'Actualizar' if valores.id else 'Guardar' }}</button></div>
+  </form>
+</section>
+{% endblock %}

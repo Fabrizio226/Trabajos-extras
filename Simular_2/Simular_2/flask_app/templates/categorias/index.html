@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Categorías{% endblock %}
+{% block content %}
+<section class="table-heading"><div><p class="eyebrow">ORGANIZA TUS TAREAS</p><h1>Categorías</h1></div><a class="btn btn-primary" href="{{ url_for('tareas.nueva_categoria') }}">＋ Nueva Categoría</a></section>
+<div class="table-responsive task-table-wrap"><table class="table table-hover task-table">
+  <thead><tr><th>Nombre</th><th>Cantidad de tareas</th><th>Acciones</th></tr></thead>
+  <tbody>{% for categoria in categorias %}<tr><td class="fw-semibold">{{ categoria.nombre }}</td><td>{{ categoria.cantidad_tareas }}</td><td class="table-actions"><a href="{{ url_for('tareas.listar', categoria_id=categoria.id) }}">Ver tareas</a><a href="{{ url_for('tareas.editar_categoria', categoria_id=categoria.id) }}">Editar</a><a class="delete-link" href="{{ url_for('tareas.eliminar_categoria', categoria_id=categoria.id) }}">Borrar</a></td></tr>{% else %}<tr><td colspan="3" class="table-empty">Todavía no has creado categorías.</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endblock %}

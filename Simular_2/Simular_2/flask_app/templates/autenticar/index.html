@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Acceso{% endblock %}
+{% block content %}
+<section class="auth-page">
+  <header class="auth-brand"><span class="auth-brand-icon">✓</span><h1>TaskTrack</h1><p>Organiza tus tareas y proyectos</p></header>
+  <div class="auth-columns">
+    <section class="auth-card" aria-labelledby="register-title">
+      <h2 id="register-title">Crear Cuenta</h2>
+      <form method="post" action="{{ url_for('usuarios.acceso') }}" class="form-grid">
+        <input type="hidden" name="accion" value="registro">
+        <div><label class="form-label" for="nombre">Nombre</label><input class="form-control" id="nombre" name="nombre" minlength="2" maxlength="80" autocomplete="given-name" required value="{{ valores.nombre if valores else '' }}"></div>
+        <div><label class="form-label" for="apellido">Apellido</label><input class="form-control" id="apellido" name="apellido" minlength="2" maxlength="80" autocomplete="family-name" required value="{{ valores.apellido if valores else '' }}"></div>
+        <div><label class="form-label" for="registro-correo">E-mail</label><input class="form-control" type="email" id="registro-correo" name="correo" autocomplete="email" required value="{{ valores.correo if valores else '' }}"></div>
+        <div><label class="form-label" for="registro-password">Contraseña</label><input class="form-control" type="password" id="registro-password" name="password" minlength="8" autocomplete="new-password" required></div>
+        <div><label class="form-label" for="confirmacion">Confirmar contraseña</label><input class="form-control" type="password" id="confirmacion" name="confirmacion" minlength="8" autocomplete="new-password" required></div>
+        <button class="btn btn-ink w-100" type="submit">Registrarse</button>
+      </form>
+      <p class="auth-switch"><a href="#login-title">¿Ya tienes cuenta? Inicia sesión</a></p>
+    </section>
+    <section class="auth-card" aria-labelledby="login-title">
+      <h2 id="login-title">Iniciar Sesión</h2>
+      <form method="post" action="{{ url_for('usuarios.acceso') }}" class="form-grid">
+        <input type="hidden" name="accion" value="login">
+        <div><label class="form-label" for="login-correo">E-mail</label><input class="form-control" type="email" id="login-correo" name="correo" autocomplete="email" required></div>
+        <div><label class="form-label" for="login-password">Contraseña</label><input class="form-control" type="password" id="login-password" name="password" autocomplete="current-password" required></div>
+        <button class="btn btn-ink w-100" type="submit">Iniciar Sesión</button>
+      </form>
+      <p class="auth-switch"><a href="#register-title">¿No tienes cuenta? Regístrate</a></p>
+    </section>
+  </div>
+</section>
+{% endblock %}

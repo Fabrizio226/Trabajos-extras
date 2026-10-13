@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Mis Tareas{% endblock %}
+{% block content %}
+<section class="table-heading"><div><p class="eyebrow">TU ESPACIO DE TRABAJO</p><h1>Mis Tareas</h1></div><a class="btn btn-primary" href="{{ url_for('tareas.nueva') }}">＋ Nueva Tarea</a></section>
+<form class="filter-panel" method="get" action="{{ url_for('tareas.listar') }}">
+  <label class="visually-hidden" for="q">Buscar por título</label><input class="form-control" id="q" name="q" placeholder="Buscar por título..." value="{{ filtros.q }}">
+  <label class="visually-hidden" for="categoria_id">Categoría</label><select class="form-select" id="categoria_id" name="categoria_id"><option value="">Todas las categorías</option>{% for categoria in categorias %}<option value="{{ categoria.id }}" {{ 'selected' if filtros.categoria_id == categoria.id|string else '' }}>{{ categoria.nombre }}</option>{% endfor %}</select>
+  <label class="visually-hidden" for="estado">Estado</label><select class="form-select" id="estado" name="estado"><option value="">Todos los estados</option>{% for estado in estados %}<option value="{{ estado }}" {{ 'selected' if filtros.estado == estado else '' }}>{{ estado }}</option>{% endfor %}</select>
+  <label class="visually-hidden" for="prioridad">Prioridad</label><select class="form-select" id="prioridad" name="prioridad"><option value="">Todas las prioridades</option>{% for prioridad in prioridades %}<option value="{{ prioridad }}" {{ 'selected' if filtros.prioridad == prioridad else '' }}>{{ prioridad }}</option>{% endfor %}</select>
+  <button class="btn btn-ink" type="submit">Filtrar</button><a class="btn btn-link" href="{{ url_for('tareas.listar') }}">Limpiar</a>
+</form>
+<div class="table-responsive task-table-wrap"><table class="table table-hover task-table">
+  <thead><tr><th>Título</th><th>Categoría</th><th>Prioridad</th><th>Fecha Límite</th><th>Estado</th><th>Acciones</th></tr></thead>
+  <tbody>{% for tarea in tareas %}<tr>
+    <td class="fw-semibold">{{ tarea.titulo }}</td><td>{{ tarea.categoria_nombre }}</td><td><span class="badge priority-{{ tarea.prioridad|lower }}">{{ tarea.prioridad }}</span></td>
+    <td>{{ tarea.fecha_limite.strftime('%Y-%m-%d') if tarea.fecha_limite else 'Sin fecha' }}</td>
+    <td><span class="badge state-{{ tarea.estado|lower|replace(' ', '-') }}">{{ tarea.estado }}</span></td>
+    <td class="table-actions"><a href="{{ url_for('tareas.detalle', tarea_id=tarea.id) }}">Ver</a><a href="{{ url_for('tareas.editar', tarea_id=tarea.id) }}">Editar</a><a class="delete-link" href="{{ url_for('tareas.eliminar', tarea_id=tarea.id) }}">Borrar</a></td>
+  </tr>{% else %}<tr><td colspan="6" class="table-empty">{% if categorias %}No hay tareas que coincidan con los filtros.{% else %}Crea una categoría antes de agregar tu primera tarea.{% endif %}</td></tr>{% endfor %}</tbody>
+</table></div>
+<div class="dashboard-grid">
+  <section class="dashboard-card"><h2>Próximas tareas</h2><div class="table-responsive"><table class="table table-sm upcoming-table"><thead><tr><th>Título</th><th>Fecha Límite</th><th>Días restantes</th></tr></thead><tbody>{% for tarea in proximas %}<tr><td><a href="{{ url_for('tareas.detalle', tarea_id=tarea.id) }}">{{ tarea.titulo }}</a></td><td>{{ tarea.fecha_limite.strftime('%Y-%m-%d') }}</td><td>{{ tarea.dias_restantes }}</td></tr>{% else %}<tr><td colspan="3" class="table-empty">No tienes tareas próximas.</td></tr>{% endfor %}</tbody></table></div></section>
+  <section class="dashboard-card summary-card"><h2>Resumen</h2><dl><div><dt>Total de tareas</dt><dd>{{ resumen.total or 0 }}</dd></div><div><dt>Pendientes</dt><dd>{{ resumen.pendientes or 0 }}</dd></div><div><dt>En progreso</dt><dd>{{ resumen.en_progreso or 0 }}</dd></div><div><dt>Completadas</dt><dd>{{ resumen.completadas or 0 }}</dd></div></dl></section>
+</div>
+{% endblock %}

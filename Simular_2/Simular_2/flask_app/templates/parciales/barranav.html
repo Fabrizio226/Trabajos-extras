@@ -1,0 +1,18 @@
+<nav class="navbar navbar-expand-lg site-nav">
+  <div class="container">
+    <a class="navbar-brand" href="{{ url_for('tareas.listar') if session.get('usuario_id') else url_for('usuarios.acceso') }}">
+      <span class="brand-mark">✓</span><span>TaskTrack</span>
+    </a>
+    {% if session.get('usuario_id') %}
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal" aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="menuPrincipal">
+        <div class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <a class="nav-link" href="{{ url_for('tareas.listar') }}">Mis Tareas</a>
+          <a class="nav-link" href="{{ url_for('tareas.categorias') }}">Categorías</a>
+          <span class="nav-greeting">Hola, {{ session.get('usuario_nombre') }}</span>
+          <form method="post" action="{{ url_for('usuarios.logout') }}"><button class="btn btn-link nav-logout" type="submit">Cerrar Sesión</button></form>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</nav>

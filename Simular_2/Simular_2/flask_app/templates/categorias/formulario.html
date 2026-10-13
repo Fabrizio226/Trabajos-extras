@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Editar' if categoria else 'Nueva' }} Categoría{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('tareas.categorias') }}">← Volver a Categorías</a>
+<section class="editor-panel category-editor"><div><p class="eyebrow">TASKTRACK</p><h1>{{ 'Editar' if categoria else 'Nueva' }} Categoría</h1></div>
+  <form method="post" class="form-grid editor-form">
+    <div><label class="form-label" for="nombre">Nombre</label><input class="form-control" id="nombre" name="nombre" minlength="3" maxlength="60" required value="{{ nombre }}"></div>
+    <div class="form-actions"><a class="btn btn-link text-secondary" href="{{ url_for('tareas.categorias') }}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar</button></div>
+  </form>
+  <p class="form-text">El nombre debe tener al menos 3 caracteres y ser único en tu cuenta.</p>
+</section>
+{% endblock %}

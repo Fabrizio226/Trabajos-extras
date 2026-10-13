@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Confirmar eliminación{% endblock %}
+{% block content %}
+<section class="confirmation-card">
+  <p class="eyebrow">CONFIRMACIÓN</p>
+  <h1>¿Eliminar {{ tipo }}?</h1>
+  <p>Vas a eliminar <strong>{{ nombre }}</strong>. Esta acción no se puede deshacer.</p>
+  {% if tipo == 'categoría' %}
+    <p class="form-text">Solo se podrán borrar categorías que no tengan tareas.</p>
+  {% endif %}
+  <div class="confirmation-actions">
+    <a class="btn btn-outline-secondary" href="{{ volver }}">Cancelar</a>
+    <form method="post" action="{{ accion }}">
+      <button class="btn btn-danger" type="submit">Sí, eliminar</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

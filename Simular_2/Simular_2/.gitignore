@@ -1,0 +1,10 @@
+.env
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+*.pyc
+.Python
+.DS_Store
+.envs
+Pipfile.lock
