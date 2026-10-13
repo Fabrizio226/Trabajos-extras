@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}{{ libro.titulo }}{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('libros.catalogo') }}">← Volver a Mis Libros</a>
+<article class="detail-card">
+	<div class="detail-top"><div class="cover-placeholder" aria-hidden="true"><span>▧</span></div>
+		<div class="detail-info"><p class="eyebrow">INFORMACIÓN COMPLETA DEL LIBRO</p><h1>{{ libro.titulo }}</h1><p><strong>Autor:</strong> {{ libro.autor }}</p><p><strong>Género:</strong> {{ libro.genero }}</p><p><strong>Publicado por:</strong> {{ libro.creador_nombre }} {{ libro.creador_apellido }}</p><p><strong>Fecha:</strong> {{ libro.fecha_publicacion.strftime('%Y-%m-%d') }}</p>
+			<div class="detail-actions"><form method="post" action="{{ url_for('libros.alternar_favorito', libro_id=libro.id) }}"><button class="btn {{ 'btn-outline-secondary' if es_favorito else 'btn-primary' }}" type="submit">{{ 'Quitar de Favoritos' if es_favorito else 'Agregar a Favoritos' }}</button></form>
+				{% if libro.usuario_id == session.get('usuario_id') %}<a class="btn btn-outline-primary" href="{{ url_for('libros.editar', libro_id=libro.id) }}">Editar</a><form method="post" action="{{ url_for('libros.eliminar', libro_id=libro.id) }}" onsubmit="return confirm('¿Eliminar este libro?');"><button class="btn btn-outline-danger" type="submit">Borrar</button></form>{% endif %}
+			</div>
+		</div>
+	</div>
+	<div class="detail-description"><h2>Descripción:</h2><p>{{ libro.descripcion }}</p></div>
+	<section class="favorite-readers"><h2>Usuarios que agregaron este libro a favoritos ({{ usuarios_favoritos|length }})</h2>
+		<ul class="reader-list">{% for usuario in usuarios_favoritos %}<li>{{ usuario.nombre }} {{ usuario.apellido }}</li>{% else %}<li>Aún no hay usuarios que lo hayan agregado.</li>{% endfor %}</ul>
+	</section>
+</article>
+{% endblock %}

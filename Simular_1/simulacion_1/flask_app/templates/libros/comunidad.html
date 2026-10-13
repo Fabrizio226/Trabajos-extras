@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Libros de la Comunidad{% endblock %}
+{% block content %}
+<section class="table-heading"><div><h1>Libros de la Comunidad</h1><p>Libros compartidos por otros usuarios.</p></div>
+	<form class="search-form" method="get" action="{{ url_for('libros.explorar') }}"><label class="visually-hidden" for="buscar">Buscar libros</label><input class="form-control" id="buscar" name="q" type="search" value="{{ busqueda }}" placeholder="Título o autor"><button class="btn btn-primary" type="submit">Buscar</button></form>
+</section>
+<div class="table-responsive"><table class="table table-striped table-hover book-table">
+	<thead><tr><th>Título</th><th>Autor</th><th>Género</th><th>Publicado por</th><th>Favoritos</th><th>Acción</th></tr></thead>
+	<tbody>{% for libro in libros %}<tr>
+		<td>{{ libro.titulo }}</td><td>{{ libro.autor }}</td><td>{{ libro.genero }}</td><td>{{ libro.creador_nombre }} {{ libro.creador_apellido }}</td><td>{{ libro.cantidad_favoritos }}</td>
+		<td><a href="{{ url_for('libros.detalles', libro_id=libro.id) }}">Ver</a></td>
+	</tr>{% else %}<tr><td colspan="6" class="table-empty">{% if busqueda %}No hay libros que coincidan con la búsqueda.{% else %}Todavía no hay publicaciones de la comunidad.{% endif %}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endblock %}

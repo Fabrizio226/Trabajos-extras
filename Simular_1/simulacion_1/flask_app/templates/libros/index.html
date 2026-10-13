@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Mis Libros{% endblock %}
+{% block content %}
+<section class="table-heading"><div><h1>Mis Libros</h1></div><a class="btn btn-primary" href="{{ url_for('libros.nuevo') }}">＋ Nuevo Libro</a></section>
+{% if libros %}
+<div class="table-responsive"><table class="table table-striped table-hover book-table">
+	<thead><tr><th>Título</th><th>Autor</th><th>Género</th><th>Fecha</th><th>Favoritos</th><th>Acciones</th></tr></thead>
+	<tbody>{% for libro in libros %}<tr>
+		<td>{{ libro.titulo }}</td><td>{{ libro.autor }}</td><td>{{ libro.genero }}</td><td>{{ libro.fecha_publicacion.strftime('%Y-%m-%d') }}</td><td>{{ libro.cantidad_favoritos }}</td>
+		<td class="table-actions"><a href="{{ url_for('libros.detalles', libro_id=libro.id) }}">Ver</a><a href="{{ url_for('libros.editar', libro_id=libro.id) }}">Editar</a><form method="post" action="{{ url_for('libros.eliminar', libro_id=libro.id) }}" onsubmit="return confirm('¿Eliminar este libro?');"><button type="submit">Borrar</button></form></td>
+	</tr>{% endfor %}</tbody>
+</table></div>
+{% else %}
+<section class="empty-table"><h2>Aún no has publicado libros</h2><p>Agrega uno para empezar tu biblioteca.</p><a class="btn btn-primary" href="{{ url_for('libros.nuevo') }}">Nuevo Libro</a></section>
+{% endif %}
+<section class="community-section">
+	<div class="table-heading"><div><h2>Libros de la Comunidad</h2></div><a href="{{ url_for('libros.explorar') }}">Explorar todos →</a></div>
+	<div class="table-responsive"><table class="table table-striped table-hover book-table">
+		<thead><tr><th>Título</th><th>Autor</th><th>Género</th><th>Publicado por</th><th>Favoritos</th><th>Acción</th></tr></thead>
+		<tbody>{% for libro in comunidad %}<tr><td>{{ libro.titulo }}</td><td>{{ libro.autor }}</td><td>{{ libro.genero }}</td><td>{{ libro.creador_nombre }} {{ libro.creador_apellido }}</td><td>{{ libro.cantidad_favoritos }}</td><td><a href="{{ url_for('libros.detalles', libro_id=libro.id) }}">Ver</a></td></tr>{% else %}<tr><td colspan="6" class="table-empty">No hay libros publicados por otros usuarios.</td></tr>{% endfor %}</tbody>
+	</table></div>
+</section>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Crear cuenta{% endblock %}
+{% block content %}
+<section class="auth-layout auth-layout-compact">
+  <div class="auth-story"><p class="eyebrow">EMPIEZA TU PRÓXIMO CAPÍTULO</p><h1>Tu biblioteca, <em>a tu manera.</em></h1><p class="story-copy">Una estantería para tus lecturas, recomendaciones y todo lo que aún quieres descubrir.</p><div class="book-stack" aria-hidden="true"><span></span><span></span><span></span></div></div>
+  <div class="auth-panel"><p class="eyebrow">NUEVA CUENTA</p><h2>Hazla tuya</h2><p class="muted-copy">Solo necesitas unos datos para empezar.</p>
+    <form method="post" class="form-grid">
+      <div class="row g-3"><div class="col-sm-6"><label class="form-label" for="nombre">Nombre</label><input class="form-control" id="nombre" name="nombre" maxlength="80" autocomplete="given-name" required value="{{ valores.nombre }}"></div><div class="col-sm-6"><label class="form-label" for="apellido">Apellido</label><input class="form-control" id="apellido" name="apellido" maxlength="80" autocomplete="family-name" required value="{{ valores.apellido }}"></div></div>
+      <div><label class="form-label" for="correo">Correo electrónico</label><input class="form-control" type="email" id="correo" name="correo" autocomplete="email" required value="{{ valores.correo }}"></div>
+      <div><label class="form-label" for="password">Contraseña</label><input class="form-control" type="password" id="password" name="password" minlength="8" autocomplete="new-password" required><div class="form-text">Al menos 8 caracteres.</div></div>
+      <div><label class="form-label" for="confirmacion">Repite la contraseña</label><input class="form-control" type="password" id="confirmacion" name="confirmacion" minlength="8" autocomplete="new-password" required></div>
+      <button class="btn btn-ink btn-lg w-100" type="submit">Crear mi cuenta <span aria-hidden="true">→</span></button>
+    </form>
+    <p class="auth-switch">¿Ya tienes una cuenta? <a href="{{ url_for('usuarios.login') }}">Inicia sesión</a></p>
+  </div>
+</section>
+{% endblock %}

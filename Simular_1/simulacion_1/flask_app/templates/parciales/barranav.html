@@ -1,0 +1,20 @@
+<nav class="navbar navbar-expand-lg site-nav">
+	<div class="container">
+		<a class="navbar-brand" href="{{ url_for('libros.catalogo') if session.get('usuario_id') else url_for('usuarios.login') }}">
+			<span class="brand-mark">▣</span><span>BookHub</span>
+		</a>
+		{% if session.get('usuario_id') %}
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal" aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú"><span class="navbar-toggler-icon"></span></button>
+			<div class="collapse navbar-collapse" id="menuPrincipal">
+				<div class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+					<a class="nav-link" href="{{ url_for('libros.catalogo') }}">Mis Libros</a>
+					<a class="nav-link" href="{{ url_for('libros.explorar') }}">Explorar</a>
+					<a class="nav-link" href="{{ url_for('libros.favoritos') }}">Mis Favoritos</a>
+					<a class="btn btn-ink btn-sm ms-lg-2" href="{{ url_for('libros.nuevo') }}">＋ Nuevo Libro</a>
+					<span class="nav-greeting">Bienvenido, {{ session.get('usuario_nombre') }}</span>
+					<form method="post" action="{{ url_for('usuarios.logout') }}"><button class="btn btn-link nav-logout" type="submit">Salir</button></form>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+</nav>

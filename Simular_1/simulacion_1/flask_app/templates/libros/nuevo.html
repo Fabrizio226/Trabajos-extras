@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Añadir libro{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('libros.catalogo') }}">← Volver a la biblioteca</a>
+<section class="editor-panel"><h1>Agregar Nuevo Libro</h1>
+  <form method="post" class="form-grid editor-form">
+    <div><label class="form-label" for="titulo">Título</label><input class="form-control" id="titulo" name="titulo" minlength="2" maxlength="160" required value="{{ valores.titulo }}"></div>
+    <div><label class="form-label" for="autor">Autor</label><input class="form-control" id="autor" name="autor" minlength="2" maxlength="120" required value="{{ valores.autor }}"></div>
+    <div><label class="form-label" for="genero">Género</label><select class="form-select" id="genero" name="genero" required><option value="">Selecciona un género</option>{% for genero in generos %}<option value="{{ genero }}" {{ 'selected' if valores.genero == genero else '' }}>{{ genero }}</option>{% endfor %}</select></div>
+    <div><label class="form-label" for="fecha_publicacion">Fecha de publicación</label><input class="form-control" type="date" id="fecha_publicacion" name="fecha_publicacion" max="{{ fecha_maxima }}" required value="{{ valores.fecha_publicacion }}"></div>
+    <div><label class="form-label" for="descripcion">Descripción</label><textarea class="form-control" id="descripcion" name="descripcion" rows="5" minlength="10" maxlength="2000" required>{{ valores.descripcion }}</textarea></div>
+    <div class="form-actions"><a class="btn btn-link text-secondary" href="{{ url_for('libros.catalogo') }}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar</button></div>
+  </form>
+</section>
+{% endblock %}

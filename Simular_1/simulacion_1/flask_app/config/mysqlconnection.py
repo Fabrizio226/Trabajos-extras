@@ -1,8 +1,10 @@
-import pymysql.cursors
 import os
+
+import pymysql.cursors
 from dotenv import load_dotenv
 
 load_dotenv()
+
 
 class MySQLConnection:
     def __init__(self, db):
@@ -11,22 +13,26 @@ class MySQLConnection:
             user=os.getenv("DB_USER"),
             password=os.getenv("DB_PASSWORD"),
             database=db,
+            charset="utf8mb4",
             cursorclass=pymysql.cursors.DictCursor,
-            autocommit=True
+            autocommit=True,
         )
 
     def query_db(self, query, data=None):
-        with self.connection.cursor() as cursor:
-            try:
+        try:
+            with self.connection.cursor() as cursor:
                 cursor.execute(query, data or {})
-                if query.strip().lower().startswith("select"):
+                if query.lstrip().lower().startswith(("select", "show")):
                     return cursor.fetchall()
-                return cursor.lastrowid
-            except Exception as e:
-                print(f"Error MySQL: {e}")
-                return False
-            finally:
-                self.connection.close()
+                if query.lstrip().lower().startswith("insert"):
+                    return cursor.lastrowid
+                return True
+        except Exception as error:
+            print(f"Error MySQL: {error}")
+            return False
+        finally:
+            self.connection.close()
+
 
 def connectToMySQL(db):
     return MySQLConnection(db)
